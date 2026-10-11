@@ -2,7 +2,7 @@
 
 Adapting the **Unscented Particle Filter (UPF)** from the paper *"Where are You? Unscented Particle Filter for Single Range Relative Pose Estimation in Unobservable Motion Using UWB and VIO"* to a simplified **2D, two-robot** setup, with the goal of running it on real hardware.
 
-> **Status: 🧪 testing / modifying / iterating** to minimise estimation error. Everything below is validated in **simulation only**. Hardware results will be added here when available.
+> **Status: testing / modifying / iterating** to minimise estimation error. Everything below is validated in **simulation only**. Hardware results will be added here when available.
 
 ---
 
