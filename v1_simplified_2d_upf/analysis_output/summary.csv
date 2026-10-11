@@ -1,0 +1,5 @@
+run,type,steps,duration_s,mean_err_m,median_err_m,rmse_m,p90_err_m,p95_err_m,max_err_m,mean_err_after2s_m,mean_err_last10pct_m,converged_below_1m_at_s,mean_heading_err_deg,median_rel_err_pct,mean_true_dist_m,max_true_dist_m,uwb_noise_std_m,mean_dist_est_err_m,final_modes,mean_A_in_B_err_m
+UPF_Code1_Static_A_LowNoise_15m,"static A, B moving",2085,41.700,0.095,0.063,0.124,0.212,0.219,0.864,0.098,0.196,0.020,1.455,1.098,6.538,13.766,0.010,0.005,2.000,0.108
+UPF_Code2_Static_A_Noisy_15m,"static A, B moving",1095,21.900,3.586,3.912,3.873,5.281,5.542,5.665,3.899,2.652,,21.857,40.738,8.828,13.766,0.248,0.033,6.000,0.279
+UPF_Code3_Both_moving_LowNoise_15m,both bots moving,1498,30.000,0.325,0.179,0.568,0.465,1.952,2.078,0.208,0.295,2.060,2.851,2.858,6.671,13.095,0.010,0.005,3.000,
+UPF_Code4_Both_moving_Noisy_15m,both bots moving,1744,34.900,0.327,0.178,0.590,0.477,1.965,3.974,0.220,0.222,2.560,4.272,2.939,7.611,16.363,0.254,0.031,5.000,
