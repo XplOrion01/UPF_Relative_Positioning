@@ -39,7 +39,7 @@ Please cite the paper if you use ideas from this work:
 }
 ```
 
-> This repo is an independent adaptation. Check the license of the original repository before copying any of its code, and add your own `LICENSE` file here.
+This repo is licensed under **Apache-2.0** (see `LICENSE`). It is an independent adaptation; if you copy any code *from* the original repository above, check that repository's license first.
 
 ---
 
@@ -67,6 +67,7 @@ When both robots move, A tracks its own heading, the relative pose becomes obser
 
 ```
 .
+├── LICENSE                       # Apache-2.0 (full text)
 ├── README.md
 └── v1_simplified_2d_upf/
     ├── code1_static_A_lowNoise.py        # static A, B moves, UWB noise 0.01 m
@@ -74,9 +75,23 @@ When both robots move, A tracks its own heading, the relative pose becomes obser
     ├── code3_both_moving_lowNoise.py     # both move, A estimates B, UWB noise 0.01 m
     ├── code4_both_moving_noisyUWB.py     # both move, A estimates B, UWB noise 0.1 - 1 m
     ├── analyze_results.py                # universal analysis / plotting script
-    ├── results/                          # one csv per run (see naming below)
-    └── analysis_output/                  # plots + summary.csv written by analyze_results.py
+    ├── results/                          # one csv per committed run + Info.txt
+    │   ├── Info.txt                      # "testing was done for a distance upto 15 meters"
+    │   ├── UPF_Code1_Static_A_LowNoise_Result_15m.csv
+    │   ├── UPF_Code2_Static_A_Noisy_Result_15m.csv
+    │   ├── UPF_Code3_Both_moving_LowNoise_Resul_15m.csv   # "Resul" is the real (typo) name
+    │   └── UPF_Code4_Both_moving_Noisy_Result_15m.csv
+    └── analysis_output/                  # written by analyze_results.py on those 4 csvs
+        ├── info.txt                      # "the analysis of all 4 codes have been saved"
+        ├── summary.csv                   # one row per run (see §8)
+        ├── comparison.png                # all 4 runs overlaid
+        ├── UPF_Code1_Static_A_LowNoise_15m_main.png / _extra.png
+        ├── UPF_Code2_Static_A_Noisy_15m_main.png / _extra.png
+        ├── UPF_Code3_Both_moving_LowNoise_15m_main.png / _extra.png
+        └── UPF_Code4_Both_moving_Noisy_15m_main.png / _extra.png
 ```
+
+> The `15m` suffix in the run filenames is **not** a start distance — it is the maximum A–B separation covered by each test (`results/Info.txt`: "testing was done for a distance upto 15 meters"). All committed runs started at a 1 m separation.
 
 ---
 
@@ -91,6 +106,8 @@ When both robots move, A tracks its own heading, the relative pose becomes obser
 
 Each file is a self-contained **PyQt6 dashboard** running a 50 Hz simulation: it simulates the motion, noisy odometry and noisy UWB, runs the filter, shows a live map and logs every step to `results.csv`.
 
+All four codes call `random.seed(42)`, so a run is **reproducible** — remove that line (or change the seed) for randomised trials. Note that code 1's UWB noise (`uwb_noise_std = 0.01`) is hardcoded inside its simulation step rather than in a top-of-file settings block, unlike codes 2–4.
+
 ---
 
 ## 6. Running
@@ -102,15 +119,21 @@ cd v1_simplified_2d_upf
 python code4_both_moving_noisyUWB.py      # runs until you close the window
 ```
 
-Each run writes `results.csv` in the folder you launch it from, and **overwrites the previous one**. After a run, move and rename it, for example:
+Each run writes `results.csv` in the folder you launch it from, and **overwrites the previous one**. After a run, move and rename it to match the committed convention, for example:
 
 ```
-results/UPF_Code4_BothMoving_NoisyUWB_Result_30s.csv
+results/UPF_Code4_Both_moving_Noisy_Result_15m.csv
 ```
+
+The trailing suffix is a run tag — typically the maximum A–B separation covered (e.g. `15m`) or a duration tag — matching the committed files in `results/`.
+
+The four codes open a **PyQt6 window**, so a GUI display is required to run them; `analyze_results.py` runs **headless** (matplotlib Agg backend, no display needed).
 
 Settings are plain constants at the top of each file (`UWB_NOISE_STD`, `NUM_PARTICLES`, `N_BEARING`, `N_HEADING`).
 
 ### CSV columns
+
+All codes write `Timestamp, Step` first. The remaining columns are:
 
 | Codes 1–2 (static A) | Codes 3–4 (both moving) |
 |---|---|
@@ -123,15 +146,18 @@ Settings are plain constants at the top of each file (`UWB_NOISE_STD`, `NUM_PART
 ## 7. Analysing results
 
 ```bash
-python analyze_results.py results/          # all csv files in a folder
-python analyze_results.py run1.csv run2.csv # specific files
+python analyze_results.py                 # no args: every *.csv next to the script
+python analyze_results.py results/        # every *.csv in a folder
+python analyze_results.py run1.csv run2.csv   # an explicit list of files
 ```
+
+Options: `--hz 50` (update rate used to turn `Step` into seconds, default **50**), `--thr 1.0` (convergence threshold in m, default **1.0**), `--out DIR` (output folder), `--show` (also open the plots in a window). It runs headless (matplotlib Agg backend) — no GUI display is needed.
 
 It detects the file type automatically and writes to `analysis_output/`:
 
 - `<run>_main.png`: error vs time, error vs distance, true vs estimated path, distances, heading error, active modes
 - `<run>_extra.png`: error distribution (CDF), and relative or gauge-independent error
-- `comparison.png`: all runs overlaid
+- `comparison.png`: all runs overlaid — **written only when analysing ≥ 2 runs**
 - `summary.csv`: mean/median/RMSE/percentile errors, convergence time, heading error, measured UWB noise
 
 ---
@@ -139,6 +165,10 @@ It detects the file type automatically and writes to `analysis_output/`:
 ## 8. Results so far (simulation only)
 
 Random start poses, 50 Hz, odometry noise σ = (3 mm, 2 mm, 0.002 rad) per step. Random-motion simulation, mean position error.
+
+### Earlier multi-seed study — run logs not included in this repo
+
+The two tables below describe an earlier multi-seed study. **Those run logs are not present in this repository**; the numbers are kept verbatim for reference only.
 
 **Both robots moving (codes 3 and 4), 6 seeds, 40 s**
 
@@ -159,6 +189,17 @@ Random start poses, 50 Hz, odometry noise σ = (3 mm, 2 mm, 0.002 rad) per step.
 | 2 | 1.0 m | Unreliable (~14 m): range noise is comparable to the starting distance, so heading hypotheses cannot be separated |
 
 For static A the position error includes an unobservable rotation about A; see the A-in-B and distance errors in `summary.csv` for the fair measure.
+
+### Committed runs in this repo (one per code)
+
+The four committed runs live in `results/`; the numbers below are taken cell-by-cell from `analysis_output/summary.csv` (hz = 50, convergence threshold 1.0 m). Each run started at a 1 m separation and ran until the robots' random walk took them to the maximum A–B distance shown.
+
+| Run | UWB noise used | Duration (s) | Mean pos err (m) | Median pos err (m) | Max pos err (m) | Max A–B dist (m) | Mean A-in-B err (m) |
+|---|---|---|---|---|---|---|---|
+| Code1 LowNoise | 0.01 m | 41.7 | 0.095 | 0.063 | 0.864 | 13.77 | 0.108 |
+| Code2 Noisy | 0.25 m | 21.9 | 3.586 | 3.912 | 5.665 | 13.77 | 0.279 |
+| Code3 LowNoise | 0.01 m | 30.0 | 0.325 | 0.179 | 2.078 | 13.10 | — |
+| Code4 Noisy | 0.25 m | 34.9 | 0.327 | 0.178 | 3.974 | 16.36 | — |
 
 > The error never reaches zero even with perfect UWB. The remaining error is odometry drift of the robots, which UWB cannot remove, and it grows as the robots move apart.
 
