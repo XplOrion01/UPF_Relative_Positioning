@@ -1,0 +1,5 @@
+run,type,steps,duration_s,mean_err_m,median_err_m,rmse_m,p90_err_m,p95_err_m,max_err_m,mean_err_after2s_m,mean_err_last10pct_m,converged_below_1m_at_s,mean_heading_err_deg,median_rel_err_pct,mean_true_dist_m,max_true_dist_m,uwb_noise_std_m,mean_dist_est_err_m,final_modes,mean_A_in_B_err_m,fim_singular_pct,fim_median_cond,fim_median_sigma_t_m,actual_err_over_fim_sigma
+results_code1,"static A, B moving",2872,57.400,0.115,0.128,0.139,0.210,0.217,0.864,0.118,0.149,0.020,1.535,1.705,6.483,13.766,0.010,0.004,2.000,0.105,100.000,,inf,
+results_code2,"static A, B moving",2956,59.100,2.773,2.775,3.047,4.626,5.140,5.665,2.853,2.888,27.900,24.476,44.784,6.459,13.766,0.248,0.029,6.000,0.178,100.000,,inf,
+results_code3,both bots moving,2936,58.700,0.281,0.161,0.468,0.569,0.820,2.078,0.221,0.142,2.060,2.025,2.049,9.624,16.363,0.010,0.005,3.000,,0.068,4421.520,0.004,32.339
+results_code4,both bots moving,2962,59.200,0.268,0.171,0.475,0.443,0.517,3.974,0.205,0.168,2.560,3.175,1.968,9.602,16.363,0.255,0.031,5.000,,0.135,4422.485,0.110,1.216
